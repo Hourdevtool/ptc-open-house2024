@@ -39,6 +39,7 @@ if (!isset($_GET['id'])) {
 // รับค่า preorder_id จาก URL
 $preorder_id = $_GET['id'];
 
+
 // ดึงข้อมูลการจองจาก tb_checkopen
 $query = "SELECT co.*, d.date_open FROM tb_checkopen co 
           JOIN tb_date d ON co.date_id = d.date_id
@@ -47,6 +48,7 @@ $stmt = $conn->prepare($query);
 $stmt->bindParam(':preorder_id', $preorder_id, PDO::PARAM_INT);
 $stmt->execute();
 $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
 
 if (!$data) {
     echo "ไม่พบข้อมูลที่ต้องการแก้ไข!";
@@ -58,6 +60,7 @@ $query_dates = "SELECT date_id, date_open FROM tb_date";
 $stmt_dates = $conn->query($query_dates);
 $dates = $stmt_dates->fetchAll(PDO::FETCH_ASSOC);
 
+
 // ตรวจสอบการส่งฟอร์ม
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $school = $_POST['school'];
@@ -66,47 +69,58 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $quandity = $_POST['quandity'];
     $date_id = $_POST['date_id'];
 
+    // กำหนดค่า car_service
+    $car_service = isset($_POST['shuttle_service']) ? 1 : 0;
+
     // อัปเดตข้อมูลใน tb_checkopen
-    $update_query = "UPDATE tb_checkopen SET school = :school, member_name = :member_name, 
-                     phone_number = :phone_number, quandity = :quandity, date_id = :date_id 
+    $update_query = "UPDATE tb_checkopen SET 
+                     school = :school, 
+                     member_name = :member_name, 
+                     phone_number = :phone_number, 
+                     quandity = :quandity, 
+                     date_id = :date_id, 
+                     car_service = :car_service 
                      WHERE preorder_id = :preorder_id";
+
     $update_stmt = $conn->prepare($update_query);
     $update_stmt->bindParam(':school', $school);
     $update_stmt->bindParam(':member_name', $member_name);
     $update_stmt->bindParam(':phone_number', $phone_number);
     $update_stmt->bindParam(':quandity', $quandity);
     $update_stmt->bindParam(':date_id', $date_id);
+    $update_stmt->bindParam(':car_service', $car_service, PDO::PARAM_INT);
     $update_stmt->bindParam(':preorder_id', $preorder_id);
-    
+
     if ($update_stmt->execute()) {
         echo "<script type='text/javascript'>
         Swal.fire({
-         title: 'สำเร็จ!',
-        text: 'แก้ไขข้อมูลสำเร็จ',
-         icon: 'success',
-         confirmButtonText: 'ตกลง'
-         }).then((result) => {
-                   if (result.isConfirmed) {
-                       window.location.href='../admin/dashboard.php';
-                   }
-               });
-             </script>";
+            title: 'สำเร็จ!',
+            text: 'แก้ไขข้อมูลสำเร็จ',
+            icon: 'success',
+            confirmButtonText: 'ตกลง'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href='../admin/dashboard.php';
+            }
+        });
+        </script>";
         exit;
     } else {
         echo "<script type='text/javascript'>
         Swal.fire({
-         title: 'เกิดข้อผิดพลาด!',
-        text: 'ไม่สามารถแก้ไขข้อมูลได้',
-         icon: 'error',
-         confirmButtonText: 'ตกลง'
-         }).then((result) => {
-                   if (result.isConfirmed) {
-                       window.location.href='../admin/dashboard.php';
-                   }
-               });
-             </script>";
+            title: 'เกิดข้อผิดพลาด!',
+            text: 'ไม่สามารถแก้ไขข้อมูลได้',
+            icon: 'error',
+            confirmButtonText: 'ตกลง'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href='../admin/dashboard.php';
+            }
+        });
+        </script>";
     }
 }
+
 ?>
 
 <div class="container mt-5">
@@ -140,6 +154,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </option>
                 <?php endforeach; ?>
             </select>
+            <div class="form-check mb-3">
+    <input type="checkbox"  name="shuttle_service"  id="shuttle_service" class="form-check-input" 
+        <?php echo isset($data['car_service']) && $data['car_service'] == 1 ? 'checked' : ''; ?>
+    >
+    <label for="shuttle_service" class="form-check-label">ต้องการรถรับส่ง (เฉพาะเขตในตัวเมือง)</label>
+</div>
         </div>
 
         <button type="submit" class="btn btn-custom w-100">อัปเดตข้อมูล</button>

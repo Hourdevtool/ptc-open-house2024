@@ -35,12 +35,12 @@
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li><a class="dropdown-item" href="signin.php">Login</a></li>
             <!-- คุณสามารถเพิ่มลิงก์เพิ่มเติมได้ที่นี่ -->
-          </ul>
-        </li>
-      </ul>
-    </div>
-  </div>
-</nav>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
 
     <!-- กล่องตรวจสอบการจอง -->
     <div class="container-fluid d-flex justify-content-center align-items-center content">

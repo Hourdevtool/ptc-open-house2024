@@ -188,12 +188,13 @@ if ($dates) {
         echo '                        <th scope="col">อีเมล</th>';
         echo '                        <th scope="col">เบอร์โทรศัพท์</th>';
         echo '                        <th scope="col">จำนวนที่จอง</th>';
+        echo '                        <th scope="col">รถรับส่ง</th>';
         echo '                    </tr>';
         echo '                </thead>';
         echo '                <tbody>';
 
         // Query เพื่อดึงข้อมูลการจองในแต่ละวันที่
-        $sqlDetails = "SELECT school, member_name, email, phone_number, quandity 
+        $sqlDetails = "SELECT school, member_name, email, phone_number, quandity,car_service
                        FROM tb_checkopen 
                        WHERE date_id = :date_id 
                        ORDER BY preorder_id ASC";
@@ -209,6 +210,7 @@ if ($dates) {
                 echo '<td>' . htmlspecialchars($row['email']) . '</td>';
                 echo '<td>' . htmlspecialchars($row['phone_number']) . '</td>';
                 echo '<td>' . htmlspecialchars($row['quandity']) . '</td>';
+                echo '<td>' . ($row['car_service'] == 1 ? 'ต้องการรถรับส่ง' : 'ไม่ต้องการรถรับส่ง') . '</td>';
                 echo '</tr>';
             }
         } else {

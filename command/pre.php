@@ -61,7 +61,8 @@
         $email = htmlspecialchars($_POST['email']);
         $quantity = (int) $_POST['quantity'];
         $date_id = (int) $_POST['date_id'];
-
+        $car_service = isset($_POST['shuttle_service']) ? 1 : 0; // กำหนดค่าเป็น 1 หากเลือก checkbox
+    
         // ดึงข้อมูลรอบเวลาเพื่อตรวจสอบ max_value
         $query = $conn->prepare(
             "SELECT max_value, 
@@ -74,7 +75,7 @@
         $query->bindParam(":date_id", $date_id, PDO::PARAM_INT);
         $query->execute();
         $date_info = $query->fetch(PDO::FETCH_ASSOC);
-
+    
         if (!$date_info) {
             echo "<script>
                 Swal.fire({
@@ -85,10 +86,10 @@
             </script>";
             exit();
         }
-
+    
         $max_value = $date_info['max_value'];
         $total_registered = $date_info['total_registered'];
-
+    
         // ตรวจสอบจำนวนที่นั่ง
         if ($quantity + $total_registered > $max_value) {
             echo "<script>
@@ -100,11 +101,11 @@
             </script>";
             exit();
         }
-
+    
         // เพิ่มข้อมูลใน tb_checkopen
         $insert_query = $conn->prepare(
-            "INSERT INTO tb_checkopen (school, member_name, phone_number, email, date_id, quandity) 
-             VALUES (:school, :member_name, :phone_number, :email, :date_id, :quandity)"
+            "INSERT INTO tb_checkopen (school, member_name, phone_number, email, date_id, quandity, car_service) 
+             VALUES (:school, :member_name, :phone_number, :email, :date_id, :quandity,:car_service)"
         );
         $insert_query->bindParam(":school", $school);
         $insert_query->bindParam(":member_name", $member_name);
@@ -112,7 +113,8 @@
         $insert_query->bindParam(":email", $email);
         $insert_query->bindParam(":date_id", $date_id, PDO::PARAM_INT);
         $insert_query->bindParam(":quandity", $quantity, PDO::PARAM_INT);
-
+        $insert_query->bindParam(":car_service", $car_service, PDO::PARAM_INT);
+    
         if ($insert_query->execute()) {
             echo "<script>
                 Swal.fire({
@@ -131,6 +133,7 @@
             </script>";
         }
     }
+    
     ?>
     <div class="container mt-5">
     <h2 class="text-center text-primary mb-4">ฟอร์มลงทะเบียน</h2>
@@ -157,6 +160,10 @@
         <div class="mb-3">
             <label for="quantity" class="form-label">จำนวน:</label>
             <input type="number" name="quantity" id="quantity" class="form-control" required>
+        </div>
+        <div class="form-check mb-3">
+                <input type="checkbox" name="shuttle_service" id="shuttle_service" class="form-check-input">
+                <label for="shuttle_service" class="form-check-label">ต้องการรถรับส่ง (เฉพาะเขตในตัวเมือง)</label>
         </div>
         <button type="submit" class="btn btn-primary w-100 mb-3">ยืนยัน</button>
         <a href="../index.php" class="btn btn-danger w-100">ย้อนกลับ</a>
