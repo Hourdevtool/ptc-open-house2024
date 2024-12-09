@@ -29,12 +29,13 @@
 
     $date_id = htmlspecialchars($_GET['date_id']);
 
-            $date = $conn->prepare("SELECT date_open FROM tb_date WHERE date_id = :id");
+            $date = $conn->prepare("SELECT date_open,date_round FROM tb_date WHERE date_id = :id");
             $date->bindParam(":id", $date_id, PDO::PARAM_INT);
             $date->execute();
             $date_open = $date->fetch(PDO::FETCH_ASSOC);
 
              $date_thai = $date_open['date_open'];
+             $date_round  = $date_open['date_round'];
 
     // ดึงข้อมูลรอบวันที่จาก tb_date
     $query = $conn->prepare("SELECT * FROM tb_date WHERE date_id = :date_id");
@@ -137,28 +138,28 @@
     ?>
     <div class="container mt-5">
     <h2 class="text-center text-primary mb-4">ฟอร์มลงทะเบียน</h2>
-    <h2 class="text-center text-primary mb-4"><?php  echo 'วันที่ลงทะเบียน'.formatDateThai($date_thai)?></h2>
+    <h2 class="text-center text-primary mb-4"><?php  echo 'วันที่ลงทะเบียน'.formatDateThai($date_thai).' '.'รอบ'.$date_round?></h2>
     
     <form action="" method="POST" id="preForm" class="p-4 bg-light shadow rounded">
         <input type="hidden" name="date_id" value="<?= $date_id ?>">
         <div class="mb-3">
-            <label for="school" class="form-label">โรงเรียน:</label>
+            <label for="school" class="form-label d-inline">โรงเรียน: <p class='d-inline fs-4' style='color:red;'>*</p></label>
             <input type="text" name="school" id="school" class="form-control" required>
         </div>
         <div class="mb-3">
-            <label for="member_name" class="form-label">ผู้ประสานงาน:</label>
+            <label for="member_name" class="form-label d-inline">ผู้ประสานงาน: <p class='d-inline fs-4' style='color:red;'>*</p></label>
             <input type="text" name="member_name" id="member_name" class="form-control" required>
         </div>
         <div class="mb-3">
-            <label for="phone_number" class="form-label">หมายเลขโทรศัพท์:</label>
+            <label for="phone_number" class="form-label d-inline">หมายเลขโทรศัพท์: <p class='d-inline fs-4' style='color:red;'>*</p></label>
             <input type="text" name="phone_number" id="phone_number" class="form-control" required>
         </div>
         <div class="mb-3">
             <label for="email" class="form-label">Email:</label>
-            <input type="email" name="email" id="email" class="form-control" required>
+            <input type="email" name="email" id="email" class="form-control" >
         </div>
         <div class="mb-3">
-            <label for="quantity" class="form-label">จำนวน:</label>
+            <label for="quantity" class="form-label d-inline">จำนวนนักเรียนที่เข้าร่วม: <p class='d-inline fs-4' style='color:red;'>*</p></label>
             <input type="number" name="quantity" id="quantity" class="form-control" required>
         </div>
         <div class="form-check mb-3">
