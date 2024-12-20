@@ -137,8 +137,11 @@
                 </div>
             </nav>
             <!-- Navbar End -->
-
-            <!-- Recent Sales Start -->
+            
+            <div class="container-fluid  mt-5 d-flex  justify-content-between ">
+            <button onclick="printTable()" class="btn btn-primary">พิมพ์ตาราง</button>
+            <a href='certificate.php' class="btn btn-primary">พิมพ์เกียรติบัตร</a>
+            </div>
             <?php
 
 $sql = "SELECT *
@@ -172,15 +175,15 @@ if ($dates) {
 
  
 
-        echo '<div class="container-fluid pt-4 px-4">';
-        echo '    <div class="bg-secondary text-center rounded p-4">';
-        echo '        <div class="d-flex align-items-center justify-content-between mb-4">';
+        echo '<div class="container-fluid pt-4 px-4  ">';
+        echo '    <div class="bg-secondary text-center rounded p-4 table-custom">';
+        echo '        <div class="d-flex align-items-center justify-content-between mb-4 ">';
         echo "            <h6 class='mb-0'>สรุปผลข้อมูลประจำวันที่</h6>";
         echo "            <h6>$date_thai ($dateRound)</h6>";
         echo "            <h6>จำนวน: $total_quantity/$max_value</h6>";
         echo '        </div>';
         echo '        <div class="table-responsive">';
-        echo '            <table class="table text-start align-middle table-bordered table-hover mb-0">';
+        echo '            <table class="table text-start align-middle table-bordered table-hover mb-0   ">';
         echo '                <thead>';
         echo '                    <tr class="text-white">';
         echo '                        <th scope="col">ชื่อโรงเรียน</th>';
@@ -216,7 +219,7 @@ if ($dates) {
         } else {
             // หากไม่มีข้อมูลในวันที่นั้น
             echo '<tr>';
-            echo '<td colspan="5">ไม่มีข้อมูลในวันที่นี้</td>';
+            echo '<td colspan="6">ไม่มีข้อมูลในวันที่นี้</td>';
             echo '</tr>';
         }
 
@@ -273,16 +276,73 @@ if ($dates) {
     <script src="js/main.js"></script>
 
     <script>
-function searchData(event) {
-    if (event.key === 'Enter') { // ตรวจสอบว่ากดปุ่ม Enter
-        var searchValue = document.getElementById('search').value.trim();
-        if (searchValue !== "") {
-            // เปลี่ยน URL เพื่อส่งค่า search
-            window.location.href = '?page=1&search=' + encodeURIComponent(searchValue);
+      function printTable() {
+    // เลือกทุกตารางที่ต้องการพิมพ์
+    var tables = document.querySelectorAll(".table-custom");
+    var printWindow = window.open('', '', 'height=800,width=1000'); // สร้างหน้าต่างใหม่
+    
+    // เริ่มสร้างเอกสาร HTML สำหรับการพิมพ์
+    printWindow.document.write('<html><head><title>Print Tables</title>');
+    printWindow.document.write('<style>');
+    printWindow.document.write(`
+        @media print {
+            @page {
+                size: A4;
+                margin: 20mm;
+            }
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: white;
+            }
+            .table-container {
+                page-break-after: always;
+            }
+            .table-custom {
+                width: 100%;
+                border-collapse: collapse;
+                margin:0;
+                background-color: white;
+            }
+            .table-custom th, .table-custom td {
+                border: 1px solid black;
+                padding: 8px;
+                text-align: center;
+                font-size: 14px;
+            }
+            .table-custom th {
+                background-color: #343a40;
+                color: white;
+            }
+            .table-header {
+                background-color: #343a40;
+                color: white;
+                padding: 10px;
+                font-size: 16px;
+                text-align: left;
+                margin-bottom: 10px;
+                border-radius: 5px;
+            }
         }
-    }
+    `); // จัดสไตล์สำหรับการพิมพ์
+    printWindow.document.write('</style>');
+    printWindow.document.write('</head><body>');
+    
+    // ดึงข้อมูลทุกตารางมาใส่ในหน้าต่างพิมพ์
+    tables.forEach(function (table) {
+        printWindow.document.write('<div class="table-container">');
+        printWindow.document.write(table.outerHTML);
+        printWindow.document.write('</div>');
+    });
+
+    printWindow.document.write('</body></html>');
+    printWindow.document.close(); // ปิดการเขียนเอกสาร
+    printWindow.print(); // เรียกหน้าต่างพิมพ์
 }
-</script>
+
+
+    </script>
 </body>
 
 </html>
