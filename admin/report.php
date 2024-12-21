@@ -140,7 +140,7 @@
             
             <div class="container-fluid  mt-5 d-flex  justify-content-between ">
             <button onclick="printTable()" class="btn btn-primary">พิมพ์ตาราง</button>
-            <a href='certificate.php' class="btn btn-primary">พิมพ์เกียรติบัตร</a>
+            <!-- <a href='certificate.php' class="btn btn-primary">พิมพ์เกียรติบัตร</a> -->
             </div>
             <?php
 
@@ -176,22 +176,22 @@ if ($dates) {
  
 
         echo '<div class="container-fluid pt-4 px-4  ">';
-        echo '    <div class="bg-secondary text-center rounded p-4 table-custom">';
-        echo '        <div class="d-flex align-items-center justify-content-between mb-4 ">';
+        echo '    <div class="bg-secondary text-center rounded p-4 report">';
+        echo '        <div class="d-flex align-items-center justify-content-between mb-4  ">';
         echo "            <h6 class='mb-0'>สรุปผลข้อมูลประจำวันที่</h6>";
         echo "            <h6>$date_thai ($dateRound)</h6>";
         echo "            <h6>จำนวน: $total_quantity/$max_value</h6>";
         echo '        </div>';
         echo '        <div class="table-responsive">';
-        echo '            <table class="table text-start align-middle table-bordered table-hover mb-0   ">';
+        echo '            <table class="table text-start align-middle table-bordered table-hover mb-0  table-custom ">';
         echo '                <thead>';
         echo '                    <tr class="text-white">';
-        echo '                        <th scope="col">ชื่อโรงเรียน</th>';
-        echo '                        <th scope="col">ชื่อ-นามสกุล</th>';
-        echo '                        <th scope="col">อีเมล</th>';
-        echo '                        <th scope="col">เบอร์โทรศัพท์</th>';
-        echo '                        <th scope="col">จำนวนที่จอง</th>';
-        echo '                        <th scope="col">รถรับส่ง</th>';
+        echo '                        <th scope="col" >ชื่อโรงเรียน</th>';
+        echo '                        <th scope="col" >ชื่อ-นามสกุล</th>';
+        echo '                        <th scope="col" >อีเมล</th>';
+        echo '                        <th scope="col" >เบอร์โทรศัพท์</th>';
+        echo '                        <th scope="col" >จำนวนที่จอง</th>';
+        echo '                        <th scope="col" >รถรับส่ง</th>';
         echo '                    </tr>';
         echo '                </thead>';
         echo '                <tbody>';
@@ -278,7 +278,7 @@ if ($dates) {
     <script>
       function printTable() {
     // เลือกทุกตารางที่ต้องการพิมพ์
-    var tables = document.querySelectorAll(".table-custom");
+    var tables = document.querySelectorAll(".report");
     var printWindow = window.open('', '', 'height=800,width=1000'); // สร้างหน้าต่างใหม่
     
     // เริ่มสร้างเอกสาร HTML สำหรับการพิมพ์
